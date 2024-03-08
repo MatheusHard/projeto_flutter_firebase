@@ -73,7 +73,7 @@ class _DrawerCustomState extends State<DrawerCustom> {
                 children:  [
                   Icon(Icons.checklist_rtl_sharp),
                   SizedBox(width: 20),
-                  Text("Lista de Tarefas -> Back4App "),
+                  Text("Chat Page"),
                 ],
               ),
             ),

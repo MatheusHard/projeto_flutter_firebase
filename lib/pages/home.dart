@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter_2024_1/pages/chat_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
 
 import '../shared/widgets/custon_drawer.dart';
 
@@ -13,10 +16,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-var controllerNick = TextEditingController(text: '');
+  var controllerNick = TextEditingController(text: '');
+
+  @override
+  void initState() {
+    generadeId();
+    super.initState();
+  }
+
+  generadeId() async {
+
+    var uuid = const Uuid();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', uuid.v4());
+
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(title: const Text("Flutter Firebase")),
       body: Center(

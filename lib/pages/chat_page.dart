@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter_2024_1/models/chat_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
   final String nickName;
@@ -12,13 +15,28 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
 
+  final db = FirebaseFirestore.instance;
   var controllerTexto = TextEditingController(text: '');
+  String? userId;
+
+  @override
+  void initState() {
+    getUserId();
+    super.initState();
+  }
+  getUserId()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId  = prefs.getString('userId');
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
       appBar: AppBar(title: const Text("Chat"),),
-      body: Container(child: Column(
+      body: Column(
         children: [
           Expanded(child: ListView()),
           Container(
@@ -40,11 +58,17 @@ class _ChatPageState extends State<ChatPage> {
                   controller: controllerTexto,
                 ),
               ),
-              IconButton(onPressed: (){}, icon: const Icon(Icons.send))
+              IconButton(onPressed: () async {
+                var chat = ChatModel(userId: userId!, texto: controllerTexto.text, nickName: widget.nickName);
+                await db.
+                collection("chats").
+                add(chat.toJson());
+                controllerTexto.clear();
+              }, icon: const Icon(Icons.send))
             ],
           ),)
         ],
-      ),),
+      ),
     ));
   }
 }

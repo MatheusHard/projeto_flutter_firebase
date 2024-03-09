@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter_2024_1/models/chat_model.dart';
+import 'package:projeto_flutter_2024_1/shared/widgets/chat_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
@@ -38,7 +39,26 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(title: const Text("Chat"),),
       body: Column(
         children: [
-          Expanded(child: ListView()),
+          Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: db.collection("chats").
+                           orderBy("dataHora", descending: false).
+                           snapshots(),
+                builder: (context, snapshot) {
+                  return !snapshot.hasData ?
+                        const Center(child: CircularProgressIndicator()) :
+                              ListView(
+                                children: snapshot.data!.docs.map((e) {
+                                  var chatModel = ChatModel.fromJson((e.data() as Map<String, dynamic>));
+                                  return ChatWidget(
+                                                    chatModel: chatModel,
+                                                    myMessage: chatModel.userId == userId
+                                                    );
+                                }).toList()
+                              );
+                }
+              )
+          ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),

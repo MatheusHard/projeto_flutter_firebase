@@ -7,8 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
   final String nickName;
+  final String chatType;
 
-  const ChatPage({super.key, required this.nickName});
+  const ChatPage({super.key, required this.nickName, required this.chatType});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -36,12 +37,12 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
-      appBar: AppBar(title: const Text("Chat"),),
+      appBar: AppBar(title: Text('''Chat de ${widget.chatType.toUpperCase()}'''),),
       body: Column(
         children: [
           Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: db.collection("chats").
+                stream: db.collection("chats_${widget.chatType}").
                            orderBy("dataHora", descending: false).
                            snapshots(),
                 builder: (context, snapshot) {
@@ -81,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
               IconButton(onPressed: () async {
                 var chat = ChatModel(userId: userId!, texto: controllerTexto.text, nickName: widget.nickName);
                 await db.
-                collection("chats").
+                collection("chats_${widget.chatType}").
                 add(chat.toJson());
                 controllerTexto.clear();
               }, icon: const Icon(Icons.send))

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter_2024_1/pages/whatzap/whatzap_page.dart';
 import '../../pages/chat/chat_page.dart';
 
 
@@ -74,6 +75,23 @@ class _DrawerCustomState extends State<DrawerCustom> {
                   Icon(Icons.checklist_rtl_sharp),
                   SizedBox(width: 20),
                   Text("Chat Page"),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: InkWell(
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext bd)=>  const WhatZapPage()));
+              },
+              child: const Row(
+                children:  [
+                  Icon(Icons.message_outlined),
+                  SizedBox(width: 20),
+                  Text("Whatszapp Page"),
                 ],
               ),
             ),
